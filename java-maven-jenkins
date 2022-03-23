@@ -1,47 +1,55 @@
-JAVA-INSTALLATION:-
-====================
+installing java,maven,jenkins on ubuntu(20.04):-
+=====================================
+JAVA-8:-
+---------
 
-cd /opt
-mkdir java
-cd java
-curl -L -C - -b "oraclelicense=accept-securebackup-cookie" -O https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz  
-tar -xvf jdk-17_linux-x64_bin.tar.gz 
-vi /etc/profile.d/java.sh
+apt install openjdk-8-jdk
+whereis jvm
+update-java-alternatives --list
 
-export JAVA_HOME=/opt/java/jdk-17.0.2
-export PATH=${JAVA_HOME}/bin:${PATH}
+vi .bashrc
+JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+export JAVA_HOME
 
-source /etc/profile.d/java.sh
+PATH=$PATH:$JAVA_HOME/bin
+export PATH
 
-which java
-/opt/java/jdk-17.0.2/bin/java
+source .bashrc
+. /etc/environment
 
-MAVEN DOWNLOAD:-
-=================
+echo $JAVA_HOME
+/usr/lib/jvm/java-1.8.0-openjdk-amd64
+
+
+
+
+MAVEN:-
+--------
+
 cd /opt
 mkdir maven
 cd maven
-wget https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
-tar -xvf apache-maven-3.8.5-bin.tar.gz
+wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+tar xvfz apache-maven-3.6.3-bin.tar.gz
 
 vi /etc/profile.d/maven.sh
 
-export M2_HOME=/opt/maven/apache-maven-3.8.5
+export M2_HOME=/opt/maven/apache-maven-3.6.3
 export PATH=${M2_HOME}/bin:${PATH}
 
 source /etc/profile.d/maven.sh
+mvn --version
 
-which mvn 
-/opt/maven/apache-maven-3.8.5/bin/mvn
 
-JENKINS DOWNLOAD:-
-===================
-#!/bin/bash
-sudo yum update -y
-sudo yum -y install java-1.8.0-openjdk
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-cd /etc/yum.repos.d/
-sudo curl -O https://pkg.jenkins.io/redhat-stable/jenkins.repo
-sudo yum -y install jenkins
+
+JENKINS:-
+----------
+
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt update
+sudo apt install jenkins
 sudo systemctl start jenkins
+sudo systemctl status jenkins
 sudo systemctl enable jenkins
+sudo ufw allow 8080
